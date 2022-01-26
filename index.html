@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>百度网址收录状态检测</title>
+  <link rel="stylesheet" href="http://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+    .alert-ok {
+      color: #ffffff;
+      background-color: #07c160;
+      border-color: #07c160;
+    }
+
+    .alert-ban {
+      color: #ffffff;
+      background-color: #fb5454;
+      border-color: #fb5454;
+    }
+
+    .alert-err {
+      color: #ffffff;
+      background-color: #fb5454;
+      border-color: #fb5454;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" style="width: 600px;">
+    <h1 class="page-header">百度网址收录状态检测</h1>
+    <form role="form" action="##" onsubmit="return false" method="post" id="form">
+      <div class="input-group">
+        <span class="input-group-addon">网址</span>
+        <input type="text" name="url" class="form-control" placeholder="请输入域名或链接">
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" onclick="get_status()">开始检测</button>
+        </span>
+      </div>
+    </form>
+
+    <!-- 结果展示 -->
+    <br />
+    <div id="result" class="alert alert-info" role="alert" style="display: none;">
+      <p>请输入域名或链接</p>
+    </div>
+  </div>
+
+  <script>
+    function get_status() {
+      $("#result").html("<p>查询中。。。</p>");
+      $.ajax({
+        type: "GET",
+        url: "./api.php",
+        data: $('#form').serialize(),
+        success: function (data) {
+          if (data.code == 200) {
+            $("#result").removeClass().addClass("alert alert-ok");
+          } else {
+            $("#result").removeClass().addClass("alert alert-ban");
+          }
+          $("#result").html(data.msg);
+          $("#result").show();
+        },
+        error: function () {
+          $("#result").removeClass().addClass("alert alert-warning");
+          $("#result").show();
+          $("#result").html("<p>服务器发生错误，可能是域名无法访问造成的</p>");
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
